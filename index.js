@@ -5,7 +5,7 @@ const port=3000;
 
 app.use(express.json());
 
-app.post("todo",(req,res)=>{
+app.post("todo",async (req,res)=>{
     const payLoad= req.body;
     const parsedPayLoad = createTodo.safeParse(payLoad);
     if(!parsedPayLoad.success){
@@ -14,14 +14,25 @@ app.post("todo",(req,res)=>{
         })
         return;
     }
+    await todo.create({
+        title:payLoad.title,
+        description:payLoad.description,
+        completed: false,
+    })
+    res.json({
+        msg:"Todo Created"
+    })
 
 
 })
-app.get("todos",(req,res)=>{
-
+app.get("todos",async (req,res)=>{
+    const todos= await todos.find({});
+    res.json({
+        todos
+    })
 })
 
-app.put("completed",(req,res)=>{
+app.put("completed",async (req,res)=>{
 
     const updatePayLoad= req.body;
     const parsedUpdatePayLoad = createTodo.safeParse(updatePayLoad);
@@ -31,6 +42,14 @@ app.put("completed",(req,res)=>{
         })
         return;
     }
+    await todo.update({
+        _id:req.body.id,
+    },{
+        completed:true
+    })
+    res.json({
+        msg:"Marked as completed"
+    })
 })
 
 
