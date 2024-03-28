@@ -6,7 +6,7 @@ const createTodo =z.object({
 })
 
 const updateTodo=z.object({
-    id: z.string()
+    _id: z.string()
 })
 
 module.exports={
